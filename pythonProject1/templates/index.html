@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Heroes APP</title>
+	<link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<style>
+
+		body {
+			background-image: url("https://www.micromania.fr/on/demandware.static/-/Sites-Micromania-Library/default/dwc2760e97/fanzone/dossier/marvel-vs-dc/marvel-vs-dc_Header.jpg");
+			background-size: cover;
+			height: 100%;
+			overflow: auto;
+			background-repeat: no-repeat;
+			background-position: center;
+			background-attachment: fixed;
+		}
+		body::before {
+			background-color: black;
+			opacity: 0.1;
+			position: absolute;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			z-index: -1;
+		}
+	</style>
+</head>
+<body>
+	<div class="login">
+		<h1>Find your hero</h1>
+		{% set fields = ['overall_score', 'intelligence_score', 'strength_score', 'speed_score', 'durability_score', 'power_score', 'combat_score', 'gender', 'height', 'weight'] %}
+		{% set required_fields = ['overall_score', 'intelligence_score', 'strength_score', 'speed_score', 'combat_score', 'height', 'weight'] %}
+		{% set field_names_has = ['has_electrokinesis', 'has_energy_constructs', 'has_mind_control_resistance', 'has_matter_manipulation', 'has_telepathy_resistance', 'has_mind_control', 'has_enhanced_hearing', 'has_dimensional_travel', 'has_element_control', 'has_size_changing', 'has_fire_resistance', 'has_fire_control', 'has_dexterity', 'has_reality_warping', 'has_illusions', 'has_energy_beams', 'has_peak_human_condition', 'has_shapeshifting', 'has_heat_resistance', 'has_jump', 'has_self-sustenance', 'has_energy_absorption', 'has_cold_resistance', 'has_magic', 'has_telekinesis', 'has_toxin_and_disease_resistance', 'has_telepathy', 'has_regeneration', 'has_immortality', 'has_teleportation', 'has_force_fields', 'has_energy_manipulation', 'has_endurance', 'has_longevity', 'has_weapon-based_powers', 'has_energy_blasts', 'has_enhanced_senses', 'has_invulnerability', 'has_stealth', 'has_marksmanship', 'has_flight', 'has_accelerated_healing', 'has_weapons_master', 'has_intelligence', 'has_reflexes', 'has_super_speed', 'has_durability', 'has_stamina', 'has_agility', 'has_super_strength'] %}
+
+		<form action="{{ url_for('predict')}}"method="post">
+			<textarea name="bio" placeholder="Enter hero's super power description"></textarea>
+			{% for field in fields %}
+				<input type="text" name="{{ field }}" placeholder="{{ field }}" {% if field in required_fields %}required{% endif %} value="{{ request.form[field] }}" />
+			{% endfor %}
+			{% for field_name in field_names_has %}
+
+			  <div class="form-check form-check-inline">
+				<label for="{{ field_name }}">{{ field_name }}</label>
+				<select class="form-control" id="{{ field_name }}" name="{{ field_name }}">
+            <option value="0">0</option>
+            <option value="1" selected>1</option>
+        </select>
+			  </div>
+			{% endfor %}
+			<button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
+		</form>
+		<br>
+		<br>
+        {% if prediction_text %}
+            <div class="prediction-box">
+                <p>{{ prediction_text }}</p>
+            </div>
+        {% endif %}
+        <style>
+	        .prediction-box {
+                  background-color: #0077be;
+                  border-radius: 10px;
+                  color: #fff;
+                  font-family: "Open Sans Condensed", sans-serif;
+                  font-size: 24px;
+                  font-weight: bold;
+                  margin-top: 30px;
+                  padding: 20px;
+                  text-align: center;
+                  text-shadow: 1px 1px 2px #000;
+                  text-transform: uppercase;
+                  width: 100%;
+                  margin-left: auto;
+                  margin-right: auto;
+                  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+                }
+
+        </style>
+	</div>
+</body>
+</html>
